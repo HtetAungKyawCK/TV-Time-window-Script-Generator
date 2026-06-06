@@ -1,0 +1,6 @@
+{
+  "name": "TradingView NY Session Lines Generator",
+  "description": "An interactive builder and simulator for TradingView Pine Script indicators that draws vertical session lines at specific New York timezone intervals with automatic Daylight Saving Time (DST) adjustment.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
