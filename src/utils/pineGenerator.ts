@@ -49,6 +49,8 @@ export function generatePineScript(settings: IndicatorSettings): string {
   return `//@version=5
 // This indicator was automatically generated and optimized by the TradingView NY Session Lines Generator.
 // Designed with automatic New York (EST/EDT) DST handling.
+// Note: Some broker platforms run older Pine Script v5 environments where max_lines_limit and max_labels_limit are not supported.
+// Removing them ensures perfect compatibility across all broker and exchange embedded charts.
 indicator("${settings.indicatorName || 'NY Session Lines (DST Adjusted)'}", overlay=true)
 
 // ==========================================
@@ -64,6 +66,12 @@ font_size_sel = input.string("${settings.fontSize.toUpperCase()}", "Label Font S
 show_labels_inp = input.bool(${settings.showLabels}, "Show Time Labels", group=grp_style, tooltip="Toggle labels on/off (အချိန်စာသားများ ဖော်ပြမလား)")
 use_bg_inp = input.bool(${settings.useBgColor}, "Use Label Background Color", group=grp_style, tooltip="Toggle background box behind words")
 bg_color_inp = input.color(${colorToPine(settings.labelBgColor)}, "Label Background Color", group=grp_style)
+
+// ==========================================
+// 📅 HISTORY & WINDOW LIMITS (ရက်စွဲ ကန့်သတ်ချက်များ)
+// ==========================================
+grp_history = "📅 History Settings (ပြသမည့်ရက်အရေအတွက်)"
+history_days_inp = input.int(${settings.historyDays}, "History Limit (Days)", minval=1, maxval=365, group=grp_history, tooltip="How many days back should lines be drawn? (ရက်အရေအတွက် ကန့်သတ်ရန် - Lines နှင့် Labels ကန့်သတ်ချက်မကျော်လွန်စေရန်)")
 
 // ==========================================
 // ⏰ TIME TRIGGER CONTROL (အချိန်တစ်ခုချင်းစီ အဖွင့်/အပိတ်)
@@ -133,8 +141,12 @@ draw_session_mark(string txt, color col) =>
 // ==========================================
 // 🎯 TIME EVALUATION & VERTICAL LINES DISPATCHER
 // ==========================================
-// Verify if we have already drawn on the current bar
-if bar_index != last_draw_bar and timeframe.isintraday
+// Calculate if current bar's time is within our history limit
+// 86,400,000 milliseconds = 1 day
+is_within_history = (timenow - time) < (history_days_inp * 86400000)
+
+// Verify if we are within history, haven't drawn already on this bar, and are on an intraday chart
+if is_within_history and bar_index != last_draw_bar and timeframe.isintraday
 ${activeTimes.map((t, idx) => {
   const labelText = t.label ? `${t.label} (${formatTime12h(t.hour, t.minute)})` : formatTime12h(t.hour, t.minute);
   const pineCol = t.colorOverride ? colorToPine(t.colorOverride) : 'line_color_inp';
@@ -142,7 +154,7 @@ ${activeTimes.map((t, idx) => {
         draw_session_mark("${labelText}", ${pineCol})
         last_draw_bar := bar_index`;
 }).join('\n\n')}
-`;
+`.trim();
 }
 
 /**

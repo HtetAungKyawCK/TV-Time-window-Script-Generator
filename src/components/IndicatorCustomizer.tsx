@@ -116,6 +116,22 @@ export const IndicatorCustomizer: React.FC<IndicatorCustomizerProps> = ({
             />
           </div>
 
+          {/* History Limit in Days */}
+          <div>
+            <label className="block text-[#a3a6af] font-medium mb-1.5">
+              ပြသမည့် ရက်အရေအတွက် (History Limit - Days)
+            </label>
+            <input 
+              type="number" 
+              min="1"
+              max="365"
+              value={settings.historyDays || 7}
+              onChange={(e) => updateSetting('historyDays', Math.max(1, Math.min(365, Number(e.target.value) || 7)))}
+              className="w-full px-3 py-2 bg-[#131722] border border-[#2a2e39] rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-[#2962ff]"
+              title="မျဉ်းနှင့် စာသားများ ဇယားပေါ်ဆွဲရန် နောက်ဆုံးဘယ်နှစ်ရက်စာကို သတ်မှတ်မလဲ။ (TradingView ၏ drawings limits မကျော်လွန်စေရန်)"
+            />
+          </div>
+
           {/* Line Style Selection */}
           <div>
             <label className="block text-[#a3a6af] font-medium mb-1.5">

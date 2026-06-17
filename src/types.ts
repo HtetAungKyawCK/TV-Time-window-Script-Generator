@@ -30,4 +30,5 @@ export interface IndicatorSettings {
   timezone: string; // Default America/New_York
   times: TimeMark[];
   maxLines: number; // For max_lines_limit input
+  historyDays: number; // Number of history days to display
 }

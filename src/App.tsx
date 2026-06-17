@@ -53,7 +53,8 @@ const INITIAL_SETTINGS: IndicatorSettings = {
   fontSize: 'small',
   timezone: 'America/New_York',
   times: DEFAULT_TIMES,
-  maxLines: 500
+  maxLines: 500,
+  historyDays: 7
 };
 
 export default function App() {

@@ -14,7 +14,7 @@ interface PineCodePanelProps {
 
 export const PineCodePanel: React.FC<PineCodePanelProps> = ({ settings }) => {
   const [copied, setCopied] = useState(false);
-  const code = generatePineScript(settings);
+  const code = generatePineScript(settings).trim();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(code);
@@ -76,9 +76,31 @@ export const PineCodePanel: React.FC<PineCodePanelProps> = ({ settings }) => {
 
         {/* Code Content Container */}
         <div className="bg-[#131722] border border-[#2a2e39] p-4 font-mono text-xs text-[#d1d4dc] overflow-auto h-[480px] rounded-b-xl shadow-inner scrollbar-thin">
-          <pre className="whitespace-pre-wrap leading-relaxed select-all">
-            {code}
-          </pre>
+          <pre className="whitespace-pre-wrap leading-relaxed select-all">{code}</pre>
+        </div>
+
+        {/* ERROR WARNING CALLED OUT */}
+        <div className="mt-4 p-4 bg-[#f23645]/10 border border-[#f23645]/30 rounded-xl text-xs space-y-2">
+          <h4 className="font-bold text-[#f23645] flex items-center gap-1.5">
+            <Terminal className="h-4 w-4 text-[#f23645]" />
+            ⚠️ IMPORTANT TRADINGVIEW ERROR FIX (အမှားဖြေရှင်းနည်း)
+          </h4>
+          <div className="text-[#a3a6af] leading-relaxed text-[11px] space-y-2.5">
+            <p>
+              အကယ်၍ TradingView Pine Editor တွင် <strong className="text-[#f23645] font-bold">"The 'indicator' function does not have an argument with the name 'max_lines_limit'"</strong> ဟု error တက်ပါက ၎င်းသည် အောက်ပါအချက်ကြောင့် ဖြစ်ပါသည် -
+            </p>
+            <ol className="list-decimal pl-4 space-y-1.5">
+              <li>
+                <strong className="text-white">အဓိကအကြောင်းအရင်း -</strong> ကုဒ်၏ ပထမဆုံးစာကြောင်းဖြစ်သော <code className="bg-[#2a2e39] px-1.5 py-0.5 rounded text-[#ff9800] font-mono">//@version=5</code> ၏ ရှေ့တွင် Space (ကွက်လပ်) သို့မဟုတ် Tab များ ခြားသော်လည်းကောင်း၊ ပါဝင်နေခြင်းကြောင့် ဖြစ်သည်။
+              </li>
+              <li>
+                <strong className="text-white">ကျော်လွှားရန် နည်းလမ်း -</strong> Pine Editor ထဲတွင် ရှိသော Line 1 ရဲ့ <code className="bg-[#2a2e39] px-1.5 py-0.5 rounded text-white font-mono">//@version=5</code> စာသား၏ ဘယ်ဘက်ဘေးတွင် (အစအဆုံး) Space (ကွက်လပ်) မရှိအောင် Backspace ဖြင့် ဖျက်ပြီး <strong className="text-white">ဘယ်ဘက်ဘောင်အစွန်းဆုံးသို့ ကပ်ပေးလိုက်ပါ။</strong>
+              </li>
+              <li>
+                <strong className="text-[#26a69a] font-bold">ဘာကြောင့်လဲ -</strong> Pine Script စည်းကမ်းချက်အရ Version Compiler ညွှန်ကြားချက် <code className="bg-[#2a2e39] px-1.5 py-0.5 rounded text-white font-mono">//@version=5</code> သည် စာကြောင်း၏ ပထမဆုံး အက္ခရာအစွန်းတွင် ရှိနေရမည်ဖြစ်ပြီး Space များ ပါဝင်နေပါက Pine compiler သည် Version 5 ကို ignore လုပ်ကာ Version 4 သို့မဟုတ် 3 အနေဖြင့်သာ တွက်ချက်ပြီး max_lines_limit မရှိပါဟူ၍ အမှားများ ပြသနေမည် ဖြစ်သည်။
+              </li>
+            </ol>
+          </div>
         </div>
       </div>
 
